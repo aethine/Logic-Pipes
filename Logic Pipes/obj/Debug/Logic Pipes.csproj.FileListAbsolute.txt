@@ -1,0 +1,9 @@
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic Pipes.csprojResolveAssemblyReference.cache
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic_Pipes.Form1.resources
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic_Pipes.Properties.Resources.resources
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic Pipes.csproj.GenerateResource.Cache
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\bin\Debug\Logic Pipes.exe.config
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\bin\Debug\Logic Pipes.exe
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\bin\Debug\Logic Pipes.pdb
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic Pipes.exe
+\\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic Pipes.pdb

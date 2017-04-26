@@ -14,6 +14,7 @@ namespace Logic_Pipes
         [STAThread]
         static void Main()
         {
+            Dialogue.Message("Hello world! I, " + Environment.MachineName + ", will be your narrator for tonight.");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
