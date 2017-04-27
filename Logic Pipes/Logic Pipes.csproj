@@ -52,6 +52,7 @@
     <Compile Include="Fileselect.Designer.cs">
       <DependentUpon>Fileselect.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interpreter.cs" />
     <Compile Include="Prompt.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -15,7 +15,17 @@ namespace Logic_Pipes
         public Prompt()
         {
             InitializeComponent();
+            Input.KeyPress += new KeyPressEventHandler(CheckEnterKeyPress);
         }
-
+        private void CheckEnterKeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+                Enter.PerformClick();
+        }
+        private void Enter_Click(object sender, EventArgs e)
+        {
+            Interpreter.Interpret(Input.Text);
+            Input.Text = null;
+        }
     }
 }

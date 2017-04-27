@@ -11,6 +11,7 @@ namespace Logic_Pipes
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        public static Prompt Prompt;
         [STAThread]
         static void Main()
         {
@@ -20,7 +21,7 @@ namespace Logic_Pipes
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Fileselect());
-                if (Global.Continue) Application.Run(new Prompt());
+                if (Global.Continue) { Prompt = new Prompt(); Application.Run(Prompt); }
                 
             } catch(Exception e)
             {
