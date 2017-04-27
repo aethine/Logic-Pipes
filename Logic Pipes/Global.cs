@@ -9,5 +9,6 @@ namespace Logic_Pipes
     class Global
     {
         public static string Path = null;
+        public static bool Continue = false;
     }
 }

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Logic_Pipes
 {
-    public partial class Form1 : Form
+    public partial class Prompt : Form
     {
-        public Form1()
+        public Prompt()
         {
             InitializeComponent();
         }

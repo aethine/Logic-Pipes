@@ -1,6 +1,6 @@
 ﻿namespace Logic_Pipes
 {
-    partial class Form1
+    partial class Prompt
     {
         /// <summary>
         /// Required designer variable.
