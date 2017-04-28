@@ -21,7 +21,7 @@ namespace Logic_Pipes
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Fileselect());
-                if (Global.Continue) { Prompt = new Prompt(); Application.Run(Prompt); }
+                if (Global.Continue) { Prompt = new Prompt(); Interpreter.Sysinit(); Application.Run(Prompt); }
                 
             } catch(Exception e)
             {
