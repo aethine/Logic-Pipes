@@ -27,7 +27,7 @@ namespace Logic_Pipes
         }
         public Container(string name, string path, params Pipe[] attatch) { Name = name; Path = path; Attatched = attatch.ToList(); }
     }
-    class Engine //todo
+    class Engine
     {
         public string Name;
         Container Attached;
@@ -142,6 +142,7 @@ namespace Logic_Pipes
             Containers[0].Attatched.Add(Pipes[0]);
             Containers[1].Attatched.Add(Pipes[1]);
         }
+
         public static void Interpret(string line)
         {
             try
@@ -151,18 +152,18 @@ namespace Logic_Pipes
                     words = line.Trim().Split(' ');
                     if (words[0] == "pipe")
                     {
-                        if (words.Length >= 3)
+                        if (words.Length >= 3) //if the command entered has at least the required amount of parameters
                         {
-                            string[] pipes;
-                            if (words[1].Contains(','))
-                                pipes = words[1].Split(',');
-                            else pipes = new string[] { words[1] };
-                            foreach (string s in pipes)
-                                try { SendDownPipe(FindPipeByName(s), getAllAfter(1)); }
-                                catch (ArgumentException) { Output("[SYS] Could not find pipe " + s); }
+                            string[] pipes; //pipes to send down
+                            if (words[1].Contains(',')) //if youre sending down more than one pipe
+                                pipes = words[1].Split(','); //splits into each pipe
+                            else pipes = new string[] { words[1] }; //for just single pipe
+                            foreach (string s in pipes) //sending the information down each pipe given
+                                try { SendDownPipe(FindPipeByName(s), getAllAfter(1)); } //getallafter is getting each word after the second place
+                                catch (ArgumentException) { Output("[SYS] Could not find pipe " + s); } //if findpipebyname cant find the pipe
                         }
                         else Output("[SYS] Not enough parameters");
-                    }
+                    } //send information down a declared pipe (view this for an annotated command)
                     else if (words[0] == "mktainer")
                     {
                         if (words.Length >= 3)
@@ -185,7 +186,7 @@ namespace Logic_Pipes
                         }
                         else Output("[SYS] Not enough parameters");
 
-                    }
+                    } //make a container
                     else if (words[0] == "mkpipe")
                     {
                         if (words.Length >= 2)
@@ -196,7 +197,7 @@ namespace Logic_Pipes
                             if (f) { Pipes.Add(new Pipe(words[1])); Output("[SYS] Created a pipe named " + words[1]); }
                         }
                         else Output("[SYS] Not enough parameters");
-                    }
+                    } //make a pipe
                     else if (words[0] == "attatch")
                     {
                         if (words.Length >= 3)
@@ -217,7 +218,7 @@ namespace Logic_Pipes
                             catch (ArgumentException) { Output("[SYS] Pipe not found"); }
                         }
                         else Output("[SYS] Not enough parameters");
-                    }
+                    } //attatch a pipe to a container
                     else if (words[0] == "mkfile")
                     {
                         if (words.Length >= 2)
@@ -230,7 +231,7 @@ namespace Logic_Pipes
                             else Output("[SYS] File already exists");
                         }
                         else Output("[SYS] Not enough parameters");
-                    }
+                    } //make a physical file
                     else if (words[0] == "mkengine")
                     {
                         if (words.Length >= 4)
@@ -252,7 +253,7 @@ namespace Logic_Pipes
                             catch (ArgumentException) { Output("[SYS] Container does not exist under name given"); }
                         }
                         else Output("[SYS] Not enough parameters");
-                    }
+                    } //make an engine and attatch it to a container
                     else if (words[0] == "runengine")
                     {
                         if (words.Length >= 2)
@@ -269,7 +270,28 @@ namespace Logic_Pipes
                         else if (words[0] == "cls") Program.Prompt.Output.Text = null;
                         else if (words[0] == "exit") Program.Prompt.Close();
                         else Output("[SYS] Command " + words[0] + " not found");
-                    }
+                    } //execute whatever a declared engine does
+                    else if (words[0] == "deltainer") 
+                    {
+                        if (words.Length >= 2)
+                            Containers.Remove(FindContByName(words[1]));
+                    } //delete a container (doesn't delete the file)
+                    else if (words[0] == "delpipe")
+                    {
+                        if (words.Length >= 2)
+                            Pipes.Remove(FindPipeByName(words[1]));
+                    } //delete a pipe
+                    else if (words[0] == "delengine")
+                    {
+                        if (words.Length >= 2)
+                            Engines.Remove(FindEngineByName(words[1]));
+                        //not removing it from its container because it cant execute if it doesnt exist in the list
+                        //and can just be replaced later
+                    } //delete an engine
+                    else if (words[0] == "delfile")
+                    {
+                        System.IO.File.Delete(words[1]);
+                    } //delete a file
                     else Output("[SYS] Command not found: " + words[0]);
                 }
             }
