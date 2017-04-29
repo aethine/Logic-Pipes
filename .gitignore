@@ -17,13 +17,14 @@
 # VS Upgrade stuff #
 ####################
 UpgradeLog.XML
-_UpgradeReport_Files/
+/_UpgradeReport_Files/
 ###############
 # Directories #
 ###############
-bin/
-obj/
-TestResults/
+/bin/
+/obj/
+/TestResults/
+/.vs/
 ###################
 # Web publish log #
 ###################
