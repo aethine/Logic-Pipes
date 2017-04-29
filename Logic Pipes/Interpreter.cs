@@ -267,31 +267,36 @@ namespace Logic_Pipes
                             }
                             else FindEngineByName(words[1]).Run();
                         }
-                        else if (words[0] == "cls") Program.Prompt.Output.Text = null;
-                        else if (words[0] == "exit") Program.Prompt.Close();
-                        else Output("[SYS] Command " + words[0] + " not found");
+                        else Output("[SYS] Not enough parameters");
                     } //execute whatever a declared engine does
                     else if (words[0] == "deltainer") 
                     {
                         if (words.Length >= 2)
                             Containers.Remove(FindContByName(words[1]));
+                        else Output("[SYS] Not enough parameters");
                     } //delete a container (doesn't delete the file)
                     else if (words[0] == "delpipe")
                     {
                         if (words.Length >= 2)
                             Pipes.Remove(FindPipeByName(words[1]));
+                        else Output("[SYS] Not enough parameters");
                     } //delete a pipe
                     else if (words[0] == "delengine")
                     {
                         if (words.Length >= 2)
                             Engines.Remove(FindEngineByName(words[1]));
+                        else Output("[SYS] Not enough parameters");
                         //not removing it from its container because it cant execute if it doesnt exist in the list
                         //and can just be replaced later
                     } //delete an engine
                     else if (words[0] == "delfile")
                     {
-                        System.IO.File.Delete(words[1]);
+                        if(words.Length >= 2)
+                            System.IO.File.Delete(words[1]);
+                        else Output("[SYS] Not enough parameters");
                     } //delete a file
+                    else if (words[0] == "cls") Program.Prompt.Output.Text = null;
+                    else if (words[0] == "exit") Program.Prompt.Close();
                     else Output("[SYS] Command not found: " + words[0]);
                 }
             }
