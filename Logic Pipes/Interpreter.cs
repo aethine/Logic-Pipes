@@ -30,7 +30,7 @@ namespace Logic_Pipes
     class Engine
     {
         public string Name;
-        Container Attached;
+        public Container Attached;
         public string Action;
         public Engine(string name, string action, Container attatch) { Name = name; Action = action; Attached = attatch; }
         public void Run()
@@ -114,6 +114,12 @@ namespace Logic_Pipes
                 if (e.Name == name) return e;
             throw new ArgumentException();
         }
+        public static Engine AttatchedEngine(this Container C)
+        {
+            foreach(Engine e in Engines)
+                if(e.Attached == C) return e;
+            return null;
+        }
         public static void SendDownPipe(Pipe pipe, string contents)
         {
             List<Container> cs = new List<Container>();
@@ -131,16 +137,19 @@ namespace Logic_Pipes
         }
         public static void Sysinit()
         {
-            Pipes.Add(new Pipe("Output"));
-            Pipes.Add(new Pipe("Input"));
-            Containers.Add(new Container("$output", null));
-            Containers.Add(new Container("$input", null));
-            Pipes[0].Sys = true;
-            Pipes[1].Sys = true;
-            Containers[0].Sys = true;
-            Containers[0].Sys = true;
-            Containers[0].Attatched.Add(Pipes[0]);
-            Containers[1].Attatched.Add(Pipes[1]);
+            {
+                Pipes.Add(new Pipe("Output"));
+                Pipes.Add(new Pipe("Input"));
+                Containers.Add(new Container("$output", null));
+                Containers.Add(new Container("$input", null));
+                Pipes[0].Sys = true;
+                Pipes[1].Sys = true;
+                Containers[0].Sys = true;
+                Containers[0].Sys = true;
+                Containers[0].Attatched.Add(Pipes[0]);
+                Containers[1].Attatched.Add(Pipes[1]);
+            } //system containers/pipes
+            
         }
 
         public static void Interpret(string line)
@@ -295,8 +304,8 @@ namespace Logic_Pipes
                             System.IO.File.Delete(words[1]);
                         else Output("[SYS] Not enough parameters");
                     } //delete a file
-                    else if (words[0] == "cls") Program.Prompt.Output.Text = null;
-                    else if (words[0] == "exit") Program.Prompt.Close();
+                    else if (words[0] == "cls") Program.Prompt.Output.Text = null; //clears console
+                    else if (words[0] == "exit") Program.Prompt.Close(); //exits
                     else Output("[SYS] Command not found: " + words[0]);
                 }
             }
