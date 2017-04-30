@@ -158,11 +158,10 @@ namespace Logic_Pipes
                 {
                     if (L.StartsWith("%%")) path = L.Split('%')[2]; //finding the container path
                     else if (L.StartsWith("##")) te = new Engine(L.Split('#')[2].Split(',')[0], L.Split('#')[2].Split(',')[1], null); //attatched engine
-                    else //doesnt handle for unattatched pipes!!
-                    {
-                        Pipe tp = new Pipe(L);
-                        try { FindPipeByName(L); } catch(ArgumentException) { Pipes.Add(tp); }
-                        ps.Add(tp);
+                    else
+                    { //doesnt handle for unattatched pipes!!
+                        try { ps.Add(FindPipeByName(L)); }
+                        catch (ArgumentException) { Pipes.Add(new Pipe(L)); ps.Add(FindPipeByName(L)); }
                     }
                 }
                 Container c = new Container(name, path, ps.ToArray());
