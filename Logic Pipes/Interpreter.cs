@@ -145,11 +145,30 @@ namespace Logic_Pipes
                 Pipes[0].Sys = true;
                 Pipes[1].Sys = true;
                 Containers[0].Sys = true;
-                Containers[0].Sys = true;
+                Containers[1].Sys = true;
                 Containers[0].Attatched.Add(Pipes[0]);
                 Containers[1].Attatched.Add(Pipes[1]);
             } //system containers/pipes
-            
+            foreach(FileList F in Program.Containers)
+            {
+                string name = null, path = null; Engine te = null; List<Pipe> ps = new List<Pipe>();
+                name = new System.IO.FileInfo(F.path).Name.Remove(new System.IO.FileInfo(F.path).Name.Length - 4);
+                //Console.WriteLine(name);
+                foreach(string L in F.getAllElements())
+                {
+                    if (L.StartsWith("%%")) path = L.Split('%')[2]; //finding the container path
+                    else if (L.StartsWith("##")) te = new Engine(L.Split('#')[2].Split(',')[0], L.Split('#')[2].Split(',')[1], null); //attatched engine
+                    else //doesnt handle for unattatched pipes!!
+                    {
+                        Pipe tp = new Pipe(L);
+                        try { FindPipeByName(L); } catch(ArgumentException) { Pipes.Add(tp); }
+                        ps.Add(tp);
+                    }
+                }
+                Container c = new Container(name, path, ps.ToArray());
+                Containers.Add(c);
+                if (te != null) { te.Attached = c; Engines.Add(te); }
+            }
         }
 
         public static void Interpret(string line)

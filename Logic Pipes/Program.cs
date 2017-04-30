@@ -35,7 +35,8 @@ namespace Logic_Pipes
                     foreach(Container C in Interpreter.Containers)
                         if (!C.Sys)
                         {
-                            FileList f = new FileList(Folder.FullName + C.Name + ".lpc");
+                            File.WriteAllText(Folder.FullName + "\\" + C.Name + ".lpc", null);
+                            FileList f = new FileList(Folder.FullName + "\\" + C.Name + ".lpc");
                             f.newElement("%%" + C.Path);
                             if (C.AttatchedEngine() != null) f.newElement("##" + C.AttatchedEngine().Name + "," + C.AttatchedEngine().Action);
                             foreach (Pipe p in C.Attatched) f.newElement(p.Name);
