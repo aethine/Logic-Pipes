@@ -30,7 +30,7 @@ namespace Logic_Pipes
     class Engine
     {
         public string Name;
-        Container Attached;
+        public Container Attached;
         public string Action;
         public Engine(string name, string action, Container attatch) { Name = name; Action = action; Attached = attatch; }
         public void Run()
@@ -114,6 +114,12 @@ namespace Logic_Pipes
                 if (e.Name == name) return e;
             throw new ArgumentException();
         }
+        public static Engine AttatchedEngine(this Container C)
+        {
+            foreach (Engine e in Engines)
+                if (e.Attached == C) return e;
+            return null;
+        }
         public static void SendDownPipe(Pipe pipe, string contents)
         {
             List<Container> cs = new List<Container>();
@@ -131,16 +137,37 @@ namespace Logic_Pipes
         }
         public static void Sysinit()
         {
-            Pipes.Add(new Pipe("Output"));
-            Pipes.Add(new Pipe("Input"));
-            Containers.Add(new Container("$output", null));
-            Containers.Add(new Container("$input", null));
-            Pipes[0].Sys = true;
-            Pipes[1].Sys = true;
-            Containers[0].Sys = true;
-            Containers[0].Sys = true;
-            Containers[0].Attatched.Add(Pipes[0]);
-            Containers[1].Attatched.Add(Pipes[1]);
+            {
+                Pipes.Add(new Pipe("Output"));
+                Pipes.Add(new Pipe("Input"));
+                Containers.Add(new Container("$output", null));
+                Containers.Add(new Container("$input", null));
+                Pipes[0].Sys = true;
+                Pipes[1].Sys = true;
+                Containers[0].Sys = true;
+                Containers[1].Sys = true;
+                Containers[0].Attatched.Add(Pipes[0]);
+                Containers[1].Attatched.Add(Pipes[1]);
+            } //system containers/pipes
+            foreach (FileList F in Program.Containers)
+            {
+                string name = null, path = null; Engine te = null; List<Pipe> ps = new List<Pipe>();
+                name = new System.IO.FileInfo(F.path).Name.Remove(new System.IO.FileInfo(F.path).Name.Length - 4);
+                //Console.WriteLine(name);
+                foreach (string L in F.getAllElements())
+                {
+                    if (L.StartsWith("%%")) path = L.Split('%')[2]; //finding the container path
+                    else if (L.StartsWith("##")) te = new Engine(L.Split('#')[2].Split(',')[0], L.Split('#')[2].Split(',')[1], null); //attatched engine
+                    else
+                    { //doesnt handle for unattatched pipes!!
+                        try { ps.Add(FindPipeByName(L)); }
+                        catch (ArgumentException) { Pipes.Add(new Pipe(L)); ps.Add(FindPipeByName(L)); }
+                    }
+                }
+                Container c = new Container(name, path, ps.ToArray());
+                Containers.Add(c);
+                if (te != null) { te.Attached = c; Engines.Add(te); }
+            }
         }
 
         public static void Interpret(string line)
@@ -269,7 +296,7 @@ namespace Logic_Pipes
                         }
                         else Output("[SYS] Not enough parameters");
                     } //execute whatever a declared engine does
-                    else if (words[0] == "deltainer") 
+                    else if (words[0] == "deltainer")
                     {
                         if (words.Length >= 2)
                             Containers.Remove(FindContByName(words[1]));
@@ -291,12 +318,46 @@ namespace Logic_Pipes
                     } //delete an engine
                     else if (words[0] == "delfile")
                     {
-                        if(words.Length >= 2)
+                        if (words.Length >= 2)
                             System.IO.File.Delete(words[1]);
                         else Output("[SYS] Not enough parameters");
                     } //delete a file
-                    else if (words[0] == "cls") Program.Prompt.Output.Text = null;
-                    else if (words[0] == "exit") Program.Prompt.Close();
+                    else if (words[0] == "list")
+                    {
+                        if (words.Length >= 2)
+                        {
+                            switch (words[1])
+                            {
+                                case "container":
+                                    foreach (Container c in Containers)
+                                    {
+                                        Output("-" + c.Name + ":");
+                                        Engine e = c.AttatchedEngine();
+                                        if (e != null) Output("--Engine: " + e.Name + " (" + e.Action.Trim() + ")");
+                                        else Output("--Engine: None");
+                                        foreach (Pipe p in c.Attatched) Output("--" + p.Name);
+                                    }
+                                    break;
+                                case "pipe":
+                                    foreach (Pipe p in Pipes) Output("-" + p.Name);
+                                    break;
+                                case "engine":
+                                    foreach(Engine e in Engines)
+                                    {
+                                        Output("-" + e.Name + ":");
+                                        Output("--Attatched to: " + e.Attached.Name);
+                                        Output("--Action: " + e.Action);
+                                    }
+                                    break;
+                                default:
+                                    Output("[SYS] Type " + words[1] + " to list not found");
+                                    break;
+                            }
+                        }
+                        else Output("[SYS] Not enough parameters");
+                    } //list types and details of those types
+                    else if (words[0] == "cls") Program.Prompt.Output.Text = null; //clears console
+                    else if (words[0] == "exit") Program.Prompt.Close(); //exits
                     else Output("[SYS] Command not found: " + words[0]);
                 }
             }

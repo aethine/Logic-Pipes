@@ -21,10 +21,10 @@ UpgradeLog.XML
 ###############
 # Directories #
 ###############
-/bin/
-/obj/
-/TestResults/
-/.vs/
+/bin
+/obj
+/TestResults
+/.vs
 ###################
 # Web publish log #
 ###################

@@ -7,7 +7,7 @@ namespace System
         {
             public string value;
         }
-        string path, comment;
+        public string path; string comment;
         element[] listset;
         public FileList(string Path, char Comment = ';')
         {
