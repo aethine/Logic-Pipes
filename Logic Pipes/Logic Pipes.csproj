@@ -54,6 +54,7 @@
       <DependentUpon>Fileselect.cs</DependentUpon>
     </Compile>
     <Compile Include="Interpreter.cs" />
+    <Compile Include="Memory.cs" />
     <Compile Include="Prompt.cs">
       <SubType>Form</SubType>
     </Compile>
