@@ -47,16 +47,35 @@ namespace Logic_Pipes
                         string place = awords[x].Split('@')[1];
                         int pl = -1;
                         if (int.TryParse(place, out pl)) awords[x] = System.IO.File.ReadAllLines(Attached.Path)[pl];
-                        else if (place == "*") //this wil work with only one reference, gotta fix!
+                        else if (place == "*") 
                         {
                             runfirst = false;
-                            foreach (string S in System.IO.File.ReadAllLines(Attached.Path)) //overflow exception happening here!!!!!!
+                            foreach (string S in System.IO.File.ReadAllLines(Attached.Path))
                             {
                                 awords[x] = S;
                                 Run();
                             }
                             runfirst = true;
                             return;
+                        }
+                        else if (place.StartsWith("%"))
+                        {
+                            string[] mm = place.Split('%')[1].Split('-');
+                            string[] lines = System.IO.File.ReadAllLines(Attached.Path);
+                            int min, max;
+                            if(mm.Length >= 2 && int.TryParse(mm[0], out min) && int.TryParse(mm[1], out max))
+                            {
+                                runfirst = false;
+                                for(; min <= max; min++)
+                                {
+                                    try { awords[x] = lines[min]; } catch (IndexOutOfRangeException) { break; }
+                                    Run();
+                                }
+                                runfirst = true;
+                                return;
+                            }
+                            else Interpreter.SendDownPipe(Interpreter.FindPipeByName("Output"),
+                        "[SYS] Line range identifier " + place.Split('%')[1] + " was not recognized");
                         }
                         else Interpreter.SendDownPipe(Interpreter.FindPipeByName("Output"),
                         "[SYS] Line identifier " + place + " was not recognized");
@@ -86,6 +105,7 @@ namespace Logic_Pipes
     }
     static class Interpreter
     {
+        static bool echo = false;
         static string[] words;
         public static List<Pipe> Pipes = new List<Pipe>();
         public static List<Container> Containers = new List<Container>();
@@ -181,6 +201,7 @@ namespace Logic_Pipes
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
+                    if (echo) Output(line.TrimStart());
                     words = line.Trim().Split(' ');
                     if (words[0] == "pipe")
                     {
@@ -304,19 +325,22 @@ namespace Logic_Pipes
                     else if (words[0] == "deltainer")
                     {
                         if (words.Length >= 2)
-                            Containers.Remove(FindContByName(words[1]));
+                            try { Containers.Remove(FindContByName(words[1])); Output("[SYS] Deleted container " + words[1]); }
+                            catch (ArgumentException) { Output("[SYS] No container exists under given name"); }
                         else Output("[SYS] Not enough parameters");
                     } //delete a container (doesn't delete the file)
                     else if (words[0] == "delpipe")
                     {
                         if (words.Length >= 2)
-                            Pipes.Remove(FindPipeByName(words[1]));
+                            try { Pipes.Remove(FindPipeByName(words[1])); Output("[SYS] Deleted pipe " + words[1]); }
+                            catch (ArgumentException) { Output("[SYS] No pipe exists under given name"); }
                         else Output("[SYS] Not enough parameters");
                     } //delete a pipe
                     else if (words[0] == "delengine")
                     {
                         if (words.Length >= 2)
-                            Engines.Remove(FindEngineByName(words[1]));
+                            try{ Engines.Remove(FindEngineByName(words[1])); Output("[SYS] Deleted engine " + words[1]); }
+                            catch (ArgumentException) { Output("[SYS] No engine exists under given name"); }
                         else Output("[SYS] Not enough parameters");
                         //not removing it from its container because it cant execute if it doesnt exist in the list
                         //and can just be replaced later
@@ -324,7 +348,7 @@ namespace Logic_Pipes
                     else if (words[0] == "delfile")
                     {
                         if (words.Length >= 2)
-                            System.IO.File.Delete(words[1]);
+                        { System.IO.File.Delete(words[1]); Output("[SYS] Deleted " + words[1]); }
                         else Output("[SYS] Not enough parameters");
                     } //delete a file
                     else if (words[0] == "list")
@@ -361,6 +385,13 @@ namespace Logic_Pipes
                         }
                         else Output("[SYS] Not enough parameters");
                     } //list types and details of those types
+                    else if (words[0] == "echo")
+                    {
+                        if (words.Length == 1) Output("[SYS] Echo is " + echo);
+                        else if (words.Length >= 2)
+                        { if (!bool.TryParse(words[1], out echo)) Output("[SYS] " + words[1] + "is not true or false"); }
+                        else Output("[SYS] Not enough parameters");
+                    } //dis/enables echoing of inputted commands, or prints echo status
                     else if (words[0] == "cls") Program.Prompt.Output.Text = null; //clears console
                     else if (words[0] == "exit") Program.Prompt.Close(); //exits
                     else Output("[SYS] Command not found: " + words[0]);
