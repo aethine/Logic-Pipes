@@ -33,11 +33,13 @@ namespace Logic_Pipes
         public Container Attached;
         public string Action;
         public Engine(string name, string action, Container attatch) { Name = name; Action = action; Attached = attatch; }
+        string[] awords;
+        bool runfirst = true;
         public void Run()
         {
             if (!string.IsNullOrEmpty(Action))
             {
-                string[] awords = Action.Split(' ');
+                if (runfirst) awords = Action.Trim().Split(' ');
                 for (int x = 0; x < awords.Length; x++)
                 {
                     if (awords[x].StartsWith("@"))
@@ -45,14 +47,17 @@ namespace Logic_Pipes
                         string place = awords[x].Split('@')[1];
                         int pl = -1;
                         if (int.TryParse(place, out pl)) awords[x] = System.IO.File.ReadAllLines(Attached.Path)[pl];
-                        //else if (place == "*") //this wil work with only one reference, gotta fix!
-                        //{
-                        //    foreach (string S in System.IO.File.ReadAllLines(Attached.Path)) //overflow exception happening here!!!!!!
-                        //    {
-                        //        awords[x] = S;
-                        //        Run();
-                        //    }
-                        //}
+                        else if (place == "*") //this wil work with only one reference, gotta fix!
+                        {
+                            runfirst = false;
+                            foreach (string S in System.IO.File.ReadAllLines(Attached.Path)) //overflow exception happening here!!!!!!
+                            {
+                                awords[x] = S;
+                                Run();
+                            }
+                            runfirst = true;
+                            return;
+                        }
                         else Interpreter.SendDownPipe(Interpreter.FindPipeByName("Output"),
                         "[SYS] Line identifier " + place + " was not recognized");
                     }
