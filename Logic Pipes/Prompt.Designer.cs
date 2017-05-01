@@ -78,7 +78,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button Enter;
+        private new System.Windows.Forms.Button Enter;
         public System.Windows.Forms.TextBox Input;
         public System.Windows.Forms.TextBox Output;
     }

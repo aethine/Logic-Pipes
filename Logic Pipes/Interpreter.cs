@@ -385,6 +385,12 @@ namespace Logic_Pipes
                         }
                         else Output("[SYS] Not enough parameters");
                     } //list types and details of those types
+                    else if (words[0] == "var")
+                    {
+                        if (words.Length > 2) Memory.NewVar(words[1], words[2]);
+                        else if (words.Length == 2) Memory.NewVar(words[1], null);
+                        else Output("[SYS] Not enough parameters");
+                    } //create variable
                     else if (words[0] == "echo")
                     {
                         if (words.Length == 1) Output("[SYS] Echo is " + echo);
