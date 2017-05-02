@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using FileOptions2;
 
 namespace Logic_Pipes
 {
@@ -14,6 +15,7 @@ namespace Logic_Pipes
         /// </summary>
         public static Prompt Prompt;
         public static List<FileList> Containers = new List<FileList>();
+        public static List<OptionSet> Vars = new List<OptionSet>();
         [STAThread]
         static void Main()
         {
@@ -28,8 +30,12 @@ namespace Logic_Pipes
                     Prompt = new Prompt();
                     var Folder = new FileInfo(Global.Path).Directory;
                     foreach (FileInfo f in Folder.GetFiles())
+                    {
                         if (f.FullName.EndsWith(".lpc")) Containers.Add(new FileList(f.FullName));
+                        else if (f.FullName.EndsWith(".lpv")) Vars.Add(new OptionSet(f.FullName));
+                    }
                     Interpreter.Sysinit();
+                    foreach (OptionSet S in Vars) Memory.Init(S);
                     Application.Run(Prompt);
                     Containers.Clear();
                     foreach(Container C in Interpreter.Containers)
@@ -43,6 +49,8 @@ namespace Logic_Pipes
                             Containers.Add(f);
                         }
                     foreach (FileList F in Containers) F.reload();
+                    OptionSet s = new OptionSet(Folder.FullName + "\\vars.lpv");
+                    foreach (Memory.Var v in Memory.Vars) s.NewEntry(v.name, v.value);
                 }
                 
             } catch(Exception e)
@@ -52,7 +60,7 @@ namespace Logic_Pipes
                 Dialogue.Error
                     ("An unhandled exception occurred! "
                     + e.GetType()
-                    + ": " + e.Message);
+                    + ": " + e.Message); 
             }
         }
     }

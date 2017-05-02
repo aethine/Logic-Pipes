@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Dialogue.cs" />
     <Compile Include="FileList.cs" />
+    <Compile Include="FileOptions2.cs" />
     <Compile Include="Fileselect.cs">
       <SubType>Form</SubType>
     </Compile>

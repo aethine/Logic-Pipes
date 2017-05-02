@@ -5,17 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using Ciloci.Flee; //thanks flee!! (http://flee.codeplex.com/)
+using FileOptions2;
 
 namespace Logic_Pipes
 {
     static class Memory
     {
-        private class Var
+        public class Var
         {
             public string name, value;
             public Var(string name, string value) { this.name = name; this.value = value; }
         }
-        static List<Var> Vars = new List<Var>();
+        public static List<Var> Vars = new List<Var>();
         static Var FindVar(string name)
         {
             foreach (Var v in Vars) if (v.name == name) return v;
@@ -28,6 +29,12 @@ namespace Logic_Pipes
         static bool VarExists(Var v)
         {
             return VarExists(v.name);
+        }
+        public static void Init(OptionSet varset)
+        {
+            varset.getAllEntryNamesAndValues(out string[] names, out string[] values);
+            for (int x = 0; x < names.Length; x++)
+                if(!VarExists(names[x])) Vars.Add(new Var(names[x], values[x]));
         }
         public static void NewVar(string name, string value) { if(!VarExists(name)) Vars.Add(new Var(name, value)); }
         public static void SetVar(string name, string newvalue)
