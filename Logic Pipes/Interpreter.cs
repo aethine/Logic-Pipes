@@ -119,7 +119,7 @@ namespace Logic_Pipes
         }
         static void Output(string message)
         {
-            Program.Prompt.Output.Text += message + Environment.NewLine;
+            Program.Prompt.Output.Text += Memory.ConvertSentence(message) + Environment.NewLine;
         }
         public static Pipe FindPipeByName(string name)
         {
@@ -387,10 +387,32 @@ namespace Logic_Pipes
                     } //list types and details of those types
                     else if (words[0] == "var")
                     {
-                        if (words.Length > 2) Memory.NewVar(words[1], words[2]);
-                        else if (words.Length == 2) Memory.NewVar(words[1], null);
+                        if (words.Length >= 2)
+                        {
+                            if (Memory.VarExists(words[1])) { Output("[SYS] Variable with given name already exists"); return; }
+                            if (words.Length > 2) Memory.NewVar(words[1], words[2]);
+                            else if (words.Length == 2) Memory.NewVar(words[1], null);
+                            Output("[SYS] Created variable " + words[1]);
+                        }
                         else Output("[SYS] Not enough parameters");
                     } //create variable
+                    else if (words[0] == "set")
+                    {
+                        if(words.Length >= 4)
+                        {
+                            string vname = words[1];
+                            if (!Memory.VarExists(vname)) { Output("[SYS] Variable with given name does not exist"); return; }
+                            string modifier = words[2];
+                            string sentence = getAllAfter(2);
+                            if (modifier == "s") sentence = Memory.ConvertSentence(sentence);
+                            else if (modifier == "a") sentence = Memory.EquISentence(Memory.ConvertSentence(sentence)).ToString();
+                            else if (modifier == "b") sentence = Memory.EquBSentence(Memory.ConvertSentence(sentence)).ToString();
+                            else { Output("[SYS] Invalid modifier " + words[2]); }
+                            Memory.SetVar(vname, sentence);
+                            Output("[SYS] " + vname + " set to " + sentence);
+                        }
+                        else Output("[SYS] Not enough parameters");
+                    } //set a variable to a value
                     else if (words[0] == "echo")
                     {
                         if (words.Length == 1) Output("[SYS] Echo is " + echo);

@@ -21,7 +21,7 @@ namespace Logic_Pipes
             foreach (Var v in Vars) if (v.name == name) return v;
             return null;
         }
-        static bool VarExists(string name)
+        public static bool VarExists(string name)
         {
             return FindVar(name) != null;
         }
@@ -49,7 +49,7 @@ namespace Logic_Pipes
             string[] w = sentence.Split(' ');
             string tor = null;
             foreach (string x in w)
-                if (x.StartsWith("$")) tor += GetVar(x.Split('$')[1] + " ");
+                if (x.StartsWith("$")) tor += GetVar(x.Split('$')[1]) + " ";
                 else tor += x + " ";
             return tor.Trim();
         }
@@ -67,9 +67,7 @@ namespace Logic_Pipes
                 else if (exps[x] == "1") fsentence += "true ";
                 else fsentence += exps[x] + " ";
             }
-            ExpressionContext context = new ExpressionContext();
-            IGenericExpression<bool> e = context.CompileGeneric<bool>(fsentence);
-            return e.Evaluate();
+            return new ExpressionContext().CompileGeneric<bool>(fsentence).Evaluate();
         }
 
     }

@@ -8,3 +8,4 @@
 \\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic Pipes.pdb
 \\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic_Pipes.Fileselect.resources
 \\Mac\Home\Documents\Visual Studio 2017\Projects\Logic Pipes\Logic Pipes\obj\Debug\Logic_Pipes.Prompt.resources
+\\mac\home\documents\visual studio 2017\Projects\Logic Pipes\Logic Pipes\bin\Debug\Ciloci.Flee.dll
